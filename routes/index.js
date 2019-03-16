@@ -3,12 +3,30 @@ var mqtt = require('mqtt');
 var router = express.Router();
 var url = require('url');
 
-var mqtt_url = process.env.CLOUDMQTT_URL || 'mqtt://localhost:1883';
-var topic = process.env.CLOUDMQTT_TOPIC || 'test';
-var client = mqtt.connect(mqtt_url);
+var mqtt_url = process.env.CLOUDMQTT_URL || 'tcp://m16.mqtt.com:14012';
+var topic = process.env.CLOUDMQTT_TOPIC || 'new';
+//var client = mqtt.connect(mqtt_url);
+
+var options = {
+    port: 14012,
+    host: 'mqtt://m16.cloudmqtt.com',
+    clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
+    username: 'hhvkvucy',
+    password: 'AqJlrrAid2xf',
+    keepalive: 60,
+    reconnectPeriod: 1000,
+    protocolId: 'MQIsdp',
+    protocolVersion: 3,
+    clean: true,
+    encoding: 'utf8'
+};
+var client = mqtt.connect('mqtt://m16.cloudmqtt.com', options);
+
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+console.log("connected 1");
   var config =  url.parse(mqtt_url);
   config.topic = topic;
   res.render('index', {
@@ -18,38 +36,37 @@ router.get('/', function(req, res, next) {
 });
 
 client.on('connect', function() {
-  router.post('/publish', function(req, res) {
-	var msg = JSON.stringify({
-	  date: new Date().toString(),
-	  msg: req.body.msg
-	});
-    client.publish(topic, msg, function() {
-      res.writeHead(204, { 'Connection': 'keep-alive' });
-      res.end();
-    });
-  });
+console.log("cpnnected 1");
 
-  router.get('/stream', function(req, res) {
+  //router.get('/stream', function(req, res) {
+   // console.log("cpnnected 661");
+
     // send headers for event-stream connection
     // see spec for more information
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
-    });
-    res.write('\n');
+    // res.writeHead(200, {
+    //   'Content-Type': 'text/event-stream',
+    //   'Cache-Control': 'no-cache',
+    //   'Connection': 'keep-alive'
+    // });
+    //res.write('\n');
 
     // Timeout timer, send a comment line every 20 sec
     var timer = setInterval(function() {
-      res.write('event: ping' + '\n\n');
+      //res.write('event: ping' + '\n\n');
+      console.log('event: ping' + '\n\n');
     }, 20000);
 
     client.subscribe(topic, function() {
+      console.log("cpnnected k1");
+
       client.on('message', function(topic, msg, pkt) {
 		//res.write("New message\n");
-		var json = JSON.parse(msg);
-        res.write("data: " + json.date + ": " + json.msg + "\n\n");
-      });
+    console.log(msg+"hello");
+		// var json = JSON.parse(msg);
+  //       console.log("heelo "+json);
+
+        //res.write("data: " + json.date + ": " + json.msg + "\n\n");
+      //});
     });
   });
 });
