@@ -50,6 +50,27 @@ console.log("cpnnected 1");
     // });
     //res.write('\n');
 
+
+
+var https = require('https') ; 
+var url ;
+var request = require('request');
+
+	function createPublicFileURL(storageName) {
+		    url = `https://us-central1-kkkkk-214820.cloudfunctions.net/addMessage?text=${encodeURIComponent(storageName)}`;
+
+console.log("what");
+request(`https://us-central1-kkkkk-214820.cloudfunctions.net/addMessage?text=${encodeURIComponent(storageName)}`, function (error, response, body) {
+console.log("up");
+  if (!error && response.statusCode == 200) {
+    console.log(body);
+  }
+});
+}
+
+
+
+	//here, we are uploading theinfo to posts .. so it can be retrieved when necessary
     // Timeout timer, send a comment line every 20 sec
     var timer = setInterval(function() {
       //res.write('event: ping' + '\n\n');
@@ -62,6 +83,8 @@ console.log("cpnnected 1");
       client.on('message', function(topic, msg, pkt) {
 		//res.write("New message\n");
     console.log(msg+"hello");
+	createPublicFileURL(msg);
+
 		// var json = JSON.parse(msg);
   //       console.log("heelo "+json);
 

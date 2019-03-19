@@ -10,9 +10,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "https": "^1.0.0",
     "morgan": "~1.9.0",
     "mqtt": "^2.13.0",
+    "nodemailer": "^5.1.1",
     "pug": "2.0.0-beta11",
+    "request": "^2.88.0",
     "serve-favicon": "~2.4.5"
   }
 }
